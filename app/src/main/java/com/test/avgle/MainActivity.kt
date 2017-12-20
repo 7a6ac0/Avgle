@@ -35,8 +35,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         nav_view.setNavigationItemSelectedListener(this)
 
         val repository = AvgleServiceFactory.create()
-        repository.getCategory()
-        //repository.getVideo("0", "1")
+        //repository.getCategory()
+        repository.getVideo("0", "1")
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe({

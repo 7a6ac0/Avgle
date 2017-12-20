@@ -1,4 +1,4 @@
-package com.test.avgle.data.model
+package com.test.avgle.data.model.Video
 
 /**
  * Created by admin on 2017/12/20.

@@ -1,7 +1,7 @@
 package com.test.avgle.data
 
-import com.test.avgle.data.model.Category
-import com.test.avgle.data.model.Video
+import com.test.avgle.data.model.Category.Category
+import com.test.avgle.data.model.Video.Video
 import io.reactivex.Observable
 import retrofit2.http.GET
 import retrofit2.http.Path
