@@ -36,11 +36,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         val repository = AvgleServiceFactory.create()
         repository.getCategory()
+        //repository.getVideo("0", "1")
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe({
                     result ->
-                    Log.d("result", "${result.name}")
+                    Log.d("result", "${result}")
                 }, {
                     error ->
                     error.printStackTrace()
