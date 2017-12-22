@@ -1,4 +1,4 @@
-package com.test.avgle
+package com.test.avgle.main
 
 import android.os.Bundle
 import android.support.design.widget.Snackbar
@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import com.test.avgle.R
 import com.test.avgle.data.AvgleServiceFactory
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -34,18 +35,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         nav_view.setNavigationItemSelectedListener(this)
 
-        val repository = AvgleServiceFactory.create()
-        //repository.getCategory()
-        repository.getVideo("0", "1")
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe({
-                    result ->
-                    Log.d("result", "${result}")
-                }, {
-                    error ->
-                    error.printStackTrace()
-                })
+//        val repository = AvgleServiceFactory.create()
+//        //repository.getCategory()
+//        repository.getVideo("0", "1")
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribeOn(Schedulers.io())
+//                .subscribe({
+//                    result ->
+//                    Log.d("result", "${result}")
+//                }, {
+//                    error ->
+//                    error.printStackTrace()
+//                })
     }
 
     override fun onBackPressed() {
