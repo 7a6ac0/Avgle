@@ -1,6 +1,7 @@
 package com.test.avgle.data
 
 import com.google.gson.GsonBuilder
+import com.test.avgle.data.model.Category.Category
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -13,8 +14,11 @@ import retrofit2.converter.gson.GsonConverterFactory
  */
 object AvgleServiceFactory {
     private val BASE_URL: String = "https://api.avgle.com/"
+    val APIService by lazy {
+        create()
+    }
 
-    fun create() : AvgleService {
+    private fun create() : AvgleService {
         val retrofit = Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())

@@ -1,102 +1,69 @@
+/*
+ * Copyright (C) 2017 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.test.avgle.main
 
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.design.widget.NavigationView
-import android.support.v4.view.GravityCompat
-import android.support.v7.app.ActionBarDrawerToggle
+import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
+
 import com.test.avgle.R
 import com.test.avgle.data.AvgleServiceFactory
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.app_bar_main.*
+import com.test.avgle.util.replaceFragmentInActivity
+import com.test.avgle.util.setupActionBar
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : AppCompatActivity() {
+    private lateinit var drawerLayout: DrawerLayout
+
+    private lateinit var mainPresenter: MainPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        setSupportActionBar(toolbar)
+        setContentView(R.layout.main_activity)
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+        // Set up the toolbar.
+        setupActionBar(R.id.toolbar) {
+            setDisplayHomeAsUpEnabled(true)
         }
 
-        val toggle = ActionBarDrawerToggle(
-                this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
-        drawer_layout.addDrawerListener(toggle)
-        toggle.syncState()
+        // Set up the navigation drawer.
+        drawerLayout = (findViewById<DrawerLayout>(R.id.drawer_layout)).apply {
+            setStatusBarBackground(R.color.colorPrimaryDark)
+        }
+        setupDrawerContent(findViewById(R.id.nav_view))
 
-        nav_view.setNavigationItemSelectedListener(this)
+        val mainFragment = supportFragmentManager.findFragmentById(R.id.contentFrame)
+                as MainFragment? ?: MainFragment.newInstance().also {
+            replaceFragmentInActivity(it, R.id.contentFrame)
+        }
 
-//        val repository = AvgleServiceFactory.create()
-//        //repository.getCategory()
-//        repository.getVideo("0", "1")
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribeOn(Schedulers.io())
-//                .subscribe({
-//                    result ->
-//                    Log.d("result", "${result}")
-//                }, {
-//                    error ->
-//                    error.printStackTrace()
-//                })
+        val avgleService = AvgleServiceFactory.APIService
+        mainPresenter = MainPresenter(avgleService, mainFragment)
+
     }
 
-    override fun onBackPressed() {
-        if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
-            drawer_layout.closeDrawer(GravityCompat.START)
-        } else {
-            super.onBackPressed()
+
+    private fun setupDrawerContent(navigationView: NavigationView) {
+        navigationView.setNavigationItemSelectedListener { menuItem ->
+
+            // Close the navigation drawer when an item is selected.
+            menuItem.isChecked = true
+            drawerLayout.closeDrawers()
+            true
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.main, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        when (item.itemId) {
-            R.id.action_settings -> return true
-            else -> return super.onOptionsItemSelected(item)
-        }
-    }
-
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        // Handle navigation view item clicks here.
-        when (item.itemId) {
-            R.id.nav_camera -> {
-                // Handle the camera action
-            }
-            R.id.nav_gallery -> {
-
-            }
-            R.id.nav_slideshow -> {
-
-            }
-            R.id.nav_manage -> {
-
-            }
-            R.id.nav_share -> {
-
-            }
-            R.id.nav_send -> {
-
-            }
-        }
-
-        drawer_layout.closeDrawer(GravityCompat.START)
-        return true
-    }
 }
