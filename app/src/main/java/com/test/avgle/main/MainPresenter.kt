@@ -15,7 +15,10 @@
  */
 package com.test.avgle.main
 
+import android.util.Log
 import com.test.avgle.data.AvgleService
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
 /**
  * Listens to user actions from the UI ([MainFragment]), retrieves the data and updates the
@@ -32,11 +35,19 @@ class MainPresenter(val avgleService: AvgleService, val mainView: MainContract.V
     }
 
     override fun start() {
-        loadCategory(false)
+        loadCategory()
     }
 
-    override fun loadCategory(forceUpdate: Boolean) {
-
+    override fun loadCategory() {
+        firstLoad = false
+        avgleService.getCategory()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe ({
+                    mainView.showCategory(it.response.categories)
+                }, { error ->
+                    error.printStackTrace()
+                })
     }
 
 

@@ -17,8 +17,10 @@ package com.test.avgle.main
 
 import android.os.Bundle
 import android.support.design.widget.NavigationView
+import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.AppCompatActivity
+import android.view.MenuItem
 
 import com.test.avgle.R
 import com.test.avgle.data.AvgleServiceFactory
@@ -36,6 +38,7 @@ class MainActivity : AppCompatActivity() {
 
         // Set up the toolbar.
         setupActionBar(R.id.toolbar) {
+            setHomeAsUpIndicator(R.drawable.ic_menu)
             setDisplayHomeAsUpEnabled(true)
         }
 
@@ -55,7 +58,6 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-
     private fun setupDrawerContent(navigationView: NavigationView) {
         navigationView.setNavigationItemSelectedListener { menuItem ->
 
@@ -64,6 +66,15 @@ class MainActivity : AppCompatActivity() {
             drawerLayout.closeDrawers()
             true
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            // Open the navigation drawer when the home icon is selected from the toolbar.
+            drawerLayout.openDrawer(GravityCompat.START)
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 
 }
