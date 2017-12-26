@@ -16,8 +16,10 @@
 package com.test.avgle.main
 
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
+import android.support.v4.widget.SwipeRefreshLayout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,6 +27,7 @@ import android.widget.*
 import com.squareup.picasso.Picasso
 import com.test.avgle.R
 import com.test.avgle.data.model.Category.CategoryDetail
+import com.test.avgle.util.showSnackBar
 
 
 /**
@@ -50,7 +53,27 @@ class MainFragment : Fragment(), MainContract.View {
 
     override fun showCategory(categories: List<CategoryDetail>) {
         listAdapter.categories = categories
+        categoryLabelView.text = resources.getString(R.string.all_categories)
         categoryView.visibility = View.VISIBLE
+    }
+
+    override fun setLoadingIndicator(active: Boolean) {
+        val root = view ?: return
+        with(root.findViewById<SwipeRefreshLayout>(R.id.category_refresh_layout)) {
+            post { isRefreshing = active }
+        }
+    }
+
+    override fun showLoadingCategoryError() {
+        showMessage(getString(R.string.loading_category_error))
+    }
+
+    override fun showLoadingCategorySuccess() {
+        showMessage(getString(R.string.loading_category_success))
+    }
+
+    private fun showMessage(message: String) {
+        view?.showSnackBar(message, Snackbar.LENGTH_LONG)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -69,7 +92,7 @@ class MainFragment : Fragment(), MainContract.View {
                 )
                 // Set the scrolling view in the custom SwipeRefreshLayout.
                 scrollUpChild = listView
-                setOnRefreshListener { presenter.loadCategory() }
+                setOnRefreshListener { presenter.loadCategory(true) }
             }
             categoryLabelView = findViewById(R.id.category_label)
             categoryView = findViewById(R.id.category_linear_layout)

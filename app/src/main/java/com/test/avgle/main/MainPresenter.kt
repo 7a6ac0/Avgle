@@ -35,18 +35,29 @@ class MainPresenter(val avgleService: AvgleService, val mainView: MainContract.V
     }
 
     override fun start() {
-        loadCategory()
+        loadCategory(true)
     }
 
-    override fun loadCategory() {
+    override fun loadCategory(showLoadingUI: Boolean) {
         firstLoad = false
+        if(showLoadingUI)
+            mainView.setLoadingIndicator(true)
+
         avgleService.getCategory()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe ({
                     mainView.showCategory(it.response.categories)
-                }, { error ->
-                    error.printStackTrace()
+                    if(showLoadingUI)
+                        mainView.setLoadingIndicator(false)
+
+                    mainView.showLoadingCategorySuccess()
+                }, {
+                    it.printStackTrace()
+                    if(showLoadingUI)
+                        mainView.setLoadingIndicator(false)
+
+                    mainView.showLoadingCategoryError()
                 })
     }
 

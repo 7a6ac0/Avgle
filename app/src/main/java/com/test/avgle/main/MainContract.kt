@@ -29,12 +29,18 @@ interface MainContract {
 
         fun showCategory(categories: List<CategoryDetail>)
 
+        fun setLoadingIndicator(active: Boolean)
+
+        fun showLoadingCategoryError()
+
+        fun showLoadingCategorySuccess()
+
     }
 
     interface Presenter : BasePresenter {
 
 
-        fun loadCategory()
+        fun loadCategory(showLoadingUI: Boolean)
 
 
     }
