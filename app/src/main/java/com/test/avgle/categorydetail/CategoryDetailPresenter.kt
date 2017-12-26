@@ -15,10 +15,10 @@ class CategoryDetailPresenter(private val categoryID: String,
     }
 
     override fun start() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        loadVides()
     }
 
     override fun loadVides() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
     }
 }

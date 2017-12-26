@@ -14,6 +14,7 @@ class CategoryDetailActivity : AppCompatActivity() {
     companion object {
         const val CATEGORY_ID = "CATEGORY_ID"
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -35,5 +36,10 @@ class CategoryDetailActivity : AppCompatActivity() {
 
         val avgleService = AvgleServiceFactory.APIService
         CategoryDetailPresenter(categoryID, avgleService, categoryDetailFragment)
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 }
