@@ -6,9 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import android.widget.ImageView
+import android.widget.ListView
+import android.widget.TextView
+import com.squareup.picasso.Picasso
 import com.test.avgle.R
 import com.test.avgle.data.model.Video.VideoDetail
 import com.test.avgle.main.MainFragment
+import org.w3c.dom.Text
 
 /**
  * Created by admin on 2017/12/26.
@@ -27,6 +32,14 @@ class CategoryDetailFragment : Fragment(), CategoryDetailContract.View {
                 }
     }
 
+    internal var itemListener: VideoItemListener = object : VideoItemListener {
+        override fun onVideoClick(clickedCategory: VideoDetail) {
+
+        }
+    }
+
+    private val listAdapter = VideoAdapter(ArrayList(0), itemListener)
+
     override fun onResume() {
         super.onResume()
         presenter.start()
@@ -40,7 +53,9 @@ class CategoryDetailFragment : Fragment(), CategoryDetailContract.View {
                               savedInstanceState: Bundle?): View {
         val root = inflater.inflate(R.layout.categorydetail_fragment, container, false)
         with(root) {
-
+            val listView = findViewById<ListView>(R.id.categorydetail_list).apply {
+                adapter = listAdapter
+            }
         }
         setHasOptionsMenu(true)
         return root
@@ -53,21 +68,32 @@ class CategoryDetailFragment : Fragment(), CategoryDetailContract.View {
                 field = videos
                 notifyDataSetChanged()
             }
-        override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
+        override fun getView(i: Int, view: View?, viewGroup: ViewGroup): View {
+            val video = getItem(i)
+            val rowView = view ?: LayoutInflater.from(viewGroup.context)
+                    .inflate(R.layout.categorydetail_item, viewGroup, false)
+
+            Picasso.with(viewGroup.context).load(video.preview_url)
+                    .into(rowView.findViewById<ImageView>(R.id.video_image))
+
+            with(rowView.findViewById<TextView>(R.id.video_title)) {
+                text = video.title
+            }
+
+            with(rowView.findViewById<TextView>(R.id.video_viewnumber)) {
+                text = video.viewnumber.toString()
+            }
+
+            rowView.setOnClickListener { itemListener.onVideoClick(video) }
+            return rowView
         }
 
-        override fun getItem(p0: Int): Any {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        }
+        override fun getItem(i: Int) = videos[i]
 
-        override fun getItemId(p0: Int): Long {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        }
+        override fun getItemId(i: Int) = i.toLong()
 
-        override fun getCount(): Int {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        }
+        override fun getCount() = videos.size
     }
 
     interface VideoItemListener {
