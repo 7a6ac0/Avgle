@@ -9,5 +9,7 @@
     <string name="all_categories">All Categories</string>
     <string name="loading_category_error">Error while loading categories.</string>
     <string name="loading_category_success">Success while loading categories.</string>
+    <string name="loading_video_error">Error while loading videos.</string>
+    <string name="loading_video_success">Success while loading videos.</string>
     <string name="video_hd">HD</string>
 </resources>

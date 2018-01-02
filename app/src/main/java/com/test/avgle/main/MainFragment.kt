@@ -15,6 +15,7 @@
  */
 package com.test.avgle.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
@@ -26,6 +27,7 @@ import android.view.ViewGroup
 import android.widget.*
 import com.squareup.picasso.Picasso
 import com.test.avgle.R
+import com.test.avgle.categorydetail.CategoryDetailActivity
 import com.test.avgle.data.model.Category.CategoryDetail
 import com.test.avgle.util.showSnackBar
 
@@ -41,7 +43,7 @@ class MainFragment : Fragment(), MainContract.View {
 
     internal var itemListener: CategoryItemListener = object : CategoryItemListener {
         override fun onCategoryClick(clickedCategory: CategoryDetail) {
-
+            presenter.openCategoryDetails(clickedCategory)
         }
     }
 
@@ -55,6 +57,14 @@ class MainFragment : Fragment(), MainContract.View {
         listAdapter.categories = categories
         categoryLabelView.text = resources.getString(R.string.all_categories)
         categoryView.visibility = View.VISIBLE
+    }
+
+    override fun showCategoryDetailUi(categoryID: String, categoryName: String) {
+        val intent = Intent(context, CategoryDetailActivity::class.java).apply {
+            putExtra(CategoryDetailActivity.CATEGORY_ID, categoryID)
+            putExtra(CategoryDetailActivity.CATEGORY_NAME, categoryName)
+        }
+        startActivity(intent)
     }
 
     override fun setLoadingIndicator(active: Boolean) {

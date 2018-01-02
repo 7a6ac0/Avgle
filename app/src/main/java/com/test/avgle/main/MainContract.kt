@@ -35,13 +35,15 @@ interface MainContract {
 
         fun showLoadingCategorySuccess()
 
+        fun showCategoryDetailUi(categoryID: String, categoryName: String)
+
     }
 
     interface Presenter : BasePresenter {
 
-
         fun loadCategory(showLoadingUI: Boolean)
 
+        fun openCategoryDetails(requestCategory: CategoryDetail)
 
     }
 }

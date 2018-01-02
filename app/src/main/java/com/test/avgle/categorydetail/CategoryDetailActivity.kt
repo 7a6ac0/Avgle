@@ -13,6 +13,7 @@ import com.test.avgle.util.setupActionBar
 class CategoryDetailActivity : AppCompatActivity() {
     companion object {
         const val CATEGORY_ID = "CATEGORY_ID"
+        const val CATEGORY_NAME = "CATEGORY_NAME"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,10 +28,11 @@ class CategoryDetailActivity : AppCompatActivity() {
         }
 
         val categoryID = intent.getStringExtra(CATEGORY_ID)
+        val categoryName = intent.getStringExtra(CATEGORY_NAME)
 
         val categoryDetailFragment = supportFragmentManager
                 .findFragmentById(R.id.contentFrame) as CategoryDetailFragment? ?:
-                CategoryDetailFragment.newInstance(categoryID).also {
+                CategoryDetailFragment.newInstance(categoryID, categoryName).also {
                     replaceFragmentInActivity(it, R.id.contentFrame)
                 }
 

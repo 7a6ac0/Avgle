@@ -17,6 +17,7 @@ package com.test.avgle.main
 
 import android.util.Log
 import com.test.avgle.data.AvgleService
+import com.test.avgle.data.model.Category.CategoryDetail
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
@@ -61,6 +62,7 @@ class MainPresenter(val avgleService: AvgleService, val mainView: MainContract.V
                 })
     }
 
-
-
+    override fun openCategoryDetails(requestCategory: CategoryDetail) {
+        mainView.showCategoryDetailUi(requestCategory.CHID, requestCategory.name)
+    }
 }

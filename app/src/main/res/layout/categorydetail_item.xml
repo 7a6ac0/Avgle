@@ -19,7 +19,7 @@
         android:layout_marginTop="@dimen/list_item_padding" />
 
     <TextView
-        android:id="@+id/hd_label"
+        android:id="@+id/video_hd_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/video_image"
