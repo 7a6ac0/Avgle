@@ -11,12 +11,14 @@
 
     <ImageView
         android:id="@+id/video_image"
+        android:background="@android:color/transparent"
         android:layout_width="match_parent"
         android:layout_height="120dp"
         android:layout_marginBottom="@dimen/list_item_padding"
         android:layout_marginLeft="@dimen/list_item_padding"
         android:layout_marginRight="@dimen/list_item_padding"
-        android:layout_marginTop="@dimen/list_item_padding" />
+        android:layout_marginTop="@dimen/list_item_padding"
+        android:scaleType="centerCrop" />
 
     <TextView
         android:id="@+id/video_hd_label"
@@ -27,7 +29,10 @@
         android:layout_alignTop="@+id/video_image"
         android:layout_gravity="bottom|center"
         android:padding="5dp"
-        android:text="@string/video_hd" />
+        android:text="@string/video_hd"
+        android:textAlignment="center"
+        android:textColor="?android:attr/colorPressedHighlight"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/video_title"
@@ -36,7 +41,9 @@
         android:layout_below="@+id/video_image"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="@dimen/list_item_padding"
-        android:layout_marginRight="@dimen/list_item_padding" />
+        android:layout_marginRight="@dimen/list_item_padding"
+        android:ellipsize="end"
+        android:singleLine="true" />
 
     <TextView
         android:id="@+id/video_viewnumber"

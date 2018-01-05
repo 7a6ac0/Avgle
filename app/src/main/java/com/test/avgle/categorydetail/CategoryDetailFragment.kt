@@ -120,7 +120,9 @@ class CategoryDetailFragment : Fragment(), CategoryDetailContract.View {
             }
 
             Picasso.with(viewGroup.context).load(video.preview_url)
-                    .into(rowView.findViewById<ImageView>(R.id.video_image))
+                    .into(rowView.findViewById<ImageView>(R.id.video_image).apply {
+                        imageAlpha = 150
+                    })
 
 
             with(rowView.findViewById<TextView>(R.id.video_title)) {
