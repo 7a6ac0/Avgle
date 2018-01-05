@@ -9,7 +9,11 @@ import com.test.avgle.data.model.Video.VideoDetail
  */
 interface CategoryDetailContract {
     interface View : BaseView<Presenter> {
-        fun showVides(videos: List<VideoDetail>)
+        fun showVideos(videos: MutableList<VideoDetail>)
+
+        fun showMoreVideos(videos: MutableList<VideoDetail>)
+
+        fun showNoMoreVideos()
 
         fun setLoadingIndicator(active: Boolean)
 
@@ -19,6 +23,8 @@ interface CategoryDetailContract {
     }
 
     interface Presenter : BasePresenter {
-        fun loadVides(showLoadingUI: Boolean)
+        fun loadVideos(showLoadingUI: Boolean)
+
+        fun loadMoreVideos()
     }
 }

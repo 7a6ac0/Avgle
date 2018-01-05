@@ -16,6 +16,7 @@ import com.test.avgle.main.MainFragment
 import com.test.avgle.main.ScrollChildSwipeRefreshLayout
 import com.test.avgle.util.showSnackBar
 import org.w3c.dom.Text
+import java.util.*
 
 /**
  * Created by admin on 2017/12/26.
@@ -41,7 +42,7 @@ class CategoryDetailFragment : Fragment(), CategoryDetailContract.View {
 
     internal var itemListener: VideoItemListener = object : VideoItemListener {
         override fun onVideoClick(clickedCategory: VideoDetail) {
-
+            // Need to write something to play video.
         }
     }
 
@@ -58,6 +59,24 @@ class CategoryDetailFragment : Fragment(), CategoryDetailContract.View {
         with(root) {
             val listView = findViewById<ListView>(R.id.categorydetail_list).apply {
                 adapter = listAdapter
+                setOnScrollListener(object : AbsListView.OnScrollListener {
+                    override fun onScrollStateChanged(view: AbsListView, scrollState: Int) {
+                        when(scrollState) {
+                            AbsListView.OnScrollListener.SCROLL_STATE_IDLE -> {
+                                if(lastVisiblePosition == (count - 1)) {
+                                    presenter.loadMoreVideos()
+                                }
+                            }
+                        }
+                    }
+
+                    override fun onScroll(view: AbsListView?,
+                                          firstVisibleItem: Int,
+                                          visibleItemCount: Int,
+                                          totalItemCount: Int) {
+
+                    }
+                })
             }
             // Set up progress indicator
             findViewById<ScrollChildSwipeRefreshLayout>(R.id.categorydetail_refresh_layout).apply {
@@ -68,7 +87,8 @@ class CategoryDetailFragment : Fragment(), CategoryDetailContract.View {
                 )
                 // Set the scrolling view in the custom SwipeRefreshLayout.
                 scrollUpChild = listView
-                setOnRefreshListener { presenter.loadVides(true) }
+                setOnRefreshListener { presenter.loadVideos(true) }
+
             }
             categorydetailView = findViewById(R.id.categorydetail_linear_layout)
             categorydetailLabel = findViewById(R.id.categorydetail_label)
@@ -77,10 +97,17 @@ class CategoryDetailFragment : Fragment(), CategoryDetailContract.View {
         return root
     }
 
-    override fun showVides(videos: List<VideoDetail>) {
+    override fun showVideos(videos: MutableList<VideoDetail>) {
         listAdapter.videos = videos
         categorydetailLabel.text = arguments.getString(ARGUMENT_CATEGORY_NAME)
         categorydetailView.visibility = View.VISIBLE
+    }
+
+    override fun showMoreVideos(videos: MutableList<VideoDetail>) {
+        with(listAdapter) {
+            this.videos.addAll(videos)
+            notifyDataSetChanged()
+        }
     }
 
     override fun setLoadingIndicator(active: Boolean) {
@@ -98,13 +125,17 @@ class CategoryDetailFragment : Fragment(), CategoryDetailContract.View {
         showMessage(getString(R.string.loading_video_success))
     }
 
+    override fun showNoMoreVideos() {
+        showMessage(getString(R.string.no_more_videos))
+    }
+
     private fun showMessage(message: String) {
         view?.showSnackBar(message, Snackbar.LENGTH_LONG)
     }
 
-    private class VideoAdapter(videos: List<VideoDetail>, private val itemListener: CategoryDetailFragment.VideoItemListener)
+    private class VideoAdapter(videos: MutableList<VideoDetail>, private val itemListener: CategoryDetailFragment.VideoItemListener)
         : BaseAdapter() {
-        var videos: List<VideoDetail> = videos
+        var videos: MutableList<VideoDetail> = videos
             set(videos) {
                 field = videos
                 notifyDataSetChanged()

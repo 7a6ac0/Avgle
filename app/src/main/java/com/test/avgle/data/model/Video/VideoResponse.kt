@@ -6,4 +6,4 @@ package com.test.avgle.data.model.Video
 data class VideoResponse(val has_more: Boolean,
                          val total_videos: Int,
                          val current_offset: String,
-                         val videos: List<VideoDetail>)
+                         val videos: MutableList<VideoDetail>)

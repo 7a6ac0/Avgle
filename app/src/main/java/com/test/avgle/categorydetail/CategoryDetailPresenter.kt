@@ -16,19 +16,25 @@ class CategoryDetailPresenter(private val categoryID: String,
         categoryDetailView.presenter = this
     }
 
-    override fun start() {
-        loadVides(true)
+    companion object {
+        private var page_offset: Int = 0
     }
 
-    override fun loadVides(showLoadingUI: Boolean) {
+    override fun start() {
+        loadVideos(true)
+    }
+
+    override fun loadVideos(showLoadingUI: Boolean) {
         if (showLoadingUI)
             categoryDetailView.setLoadingIndicator(true)
 
-        avgleService.getVideo("0", categoryID)
+        page_offset = 0
+
+        avgleService.getVideo(page_offset.toString(), categoryID)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe ({
-                    categoryDetailView.showVides(it.response.videos)
+                    categoryDetailView.showVideos(it.response.videos)
                     if(showLoadingUI)
                         categoryDetailView.setLoadingIndicator(false)
 
@@ -41,4 +47,21 @@ class CategoryDetailPresenter(private val categoryID: String,
                     categoryDetailView.showLoadingVideoError()
                 })
     }
+
+    override fun loadMoreVideos() {
+        page_offset++
+
+        avgleService.getVideo(page_offset.toString(), categoryID)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe ({
+                    if (it.response.has_more)
+                        categoryDetailView.showMoreVideos(it.response.videos)
+                    else
+                        categoryDetailView.showNoMoreVideos()
+                }, {
+                    it.printStackTrace()
+                })
+    }
+
 }
