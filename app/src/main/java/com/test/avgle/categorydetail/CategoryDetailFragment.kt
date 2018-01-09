@@ -12,10 +12,8 @@ import android.widget.*
 import com.squareup.picasso.Picasso
 import com.test.avgle.R
 import com.test.avgle.data.model.Video.VideoDetail
-import com.test.avgle.main.MainFragment
 import com.test.avgle.main.ScrollChildSwipeRefreshLayout
 import com.test.avgle.util.showSnackBar
-import org.w3c.dom.Text
 import java.util.*
 
 /**

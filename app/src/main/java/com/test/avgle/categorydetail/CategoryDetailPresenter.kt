@@ -55,12 +55,14 @@ class CategoryDetailPresenter(private val categoryID: String,
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe ({
-                    if (it.response.has_more)
-                        categoryDetailView.showMoreVideos(it.response.videos)
-                    else
+                    if (!it.response.has_more && it.response.videos.size == 0)
                         categoryDetailView.showNoMoreVideos()
+                    else
+                        categoryDetailView.showMoreVideos(it.response.videos)
+
                 }, {
                     it.printStackTrace()
+                    categoryDetailView.showLoadingVideoError()
                 })
     }
 
