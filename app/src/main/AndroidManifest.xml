@@ -18,11 +18,16 @@
             android:theme="@style/AppTheme.OverlapSystemBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".categorydetail.CategoryDetailActivity" />
+        <activity
+            android:name=".videoview.VideoViewActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation"
+            android:launchMode="singleTop"
+            android:theme="@style/PlayerTheme">
+        </activity>
     </application>
 
 </manifest>

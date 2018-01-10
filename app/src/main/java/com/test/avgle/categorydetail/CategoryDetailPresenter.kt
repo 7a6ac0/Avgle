@@ -66,4 +66,8 @@ class CategoryDetailPresenter(private val categoryID: String,
                 })
     }
 
+    override fun openVideo(originalVideoUrl: String) {
+        // Need to parse whole html to get the video streaming url.
+        categoryDetailView.showVideoAndPlay(originalVideoUrl)
+    }
 }

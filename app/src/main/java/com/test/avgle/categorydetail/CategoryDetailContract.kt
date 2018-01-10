@@ -20,11 +20,15 @@ interface CategoryDetailContract {
         fun showLoadingVideoError()
 
         fun showLoadingVideoSuccess()
+
+        fun showVideoAndPlay(videoUrl: String)
     }
 
     interface Presenter : BasePresenter {
         fun loadVideos(showLoadingUI: Boolean)
 
         fun loadMoreVideos()
+
+        fun openVideo(originalVideoUrl: String)
     }
 }
