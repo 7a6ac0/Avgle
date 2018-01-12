@@ -1,13 +1,13 @@
 package com.test.avgle.videoview
 
 import android.app.Activity
-import android.media.MediaPlayer
+import android.app.Dialog
 import android.net.Uri
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.view.View
-import android.widget.MediaController
-import android.widget.ProgressBar
-import android.widget.VideoView
+import android.view.ViewGroup
+import android.widget.*
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
 import com.google.android.exoplayer2.source.ExtractorMediaSource
@@ -18,6 +18,7 @@ import com.google.android.exoplayer2.source.dash.DefaultDashChunkSource
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray
+import com.google.android.exoplayer2.ui.PlaybackControlView
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
@@ -33,8 +34,14 @@ class VideoViewActivity : Activity(), Player.EventListener {
     private lateinit var videoView: SimpleExoPlayerView
     private lateinit var videoProgressbar: ProgressBar
     private lateinit var simpleExoplayer: SimpleExoPlayer
-    private var playbackPosition = 0L
-    private val url = "http://www.sample-videos.com/video/mp4/720/big_buck_bunny_720p_1mb.mp4"
+    private lateinit var mFullScreenDialog: Dialog
+    private lateinit var mFullScreenButton: FrameLayout
+    private lateinit var mFullScreenIcon: ImageView
+
+    private var mExoPlayerFullscreen = false
+    private var mResumePosition = 0L
+
+    private val url = "http://demos.webmproject.org/exoplayer/glass.mp4"
 
     private val bandwidthMeter by lazy {
         DefaultBandwidthMeter()
@@ -51,12 +58,69 @@ class VideoViewActivity : Activity(), Player.EventListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.videoview_activity)
+
+        initFullscreenDialog()
+        initFullscreenButton()
         initializeExoplayer()
     }
 
-    override fun onStop() {
+    override fun onResume() {
+
+        super.onResume()
+    }
+
+    override fun onPause() {
+        pauseExoplayer()
+        super.onPause()
+    }
+
+    override fun onDestroy() {
         releaseExoplayer()
-        super.onStop()
+        super.onDestroy()
+    }
+
+    private fun initFullscreenDialog() {
+        mFullScreenDialog = object : Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen) {
+            override fun onBackPressed() {
+                closeFullscreenDialog()
+                super.onBackPressed()
+            }
+        }
+    }
+
+    private fun closeFullscreenDialog() {
+        val viewGroup = videoView.parent as ViewGroup
+        viewGroup.removeView(videoView)
+        findViewById<FrameLayout>(R.id.video_framelayout).addView(videoView)
+        mExoPlayerFullscreen = false
+        mFullScreenDialog.dismiss()
+        mFullScreenIcon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_fullscreen_expand))
+    }
+
+    private fun openFullscreenDialog() {
+        val viewGroup = videoView.parent as ViewGroup
+        viewGroup.removeView(videoView)
+        mFullScreenDialog.addContentView(
+                videoView,
+                ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        )
+        mFullScreenIcon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_fullscreen_skrink))
+        mExoPlayerFullscreen = true
+        mFullScreenDialog.show()
+    }
+
+    private fun initFullscreenButton() {
+        val controlView = findViewById<PlaybackControlView>(R.id.exo_controller)
+        with(controlView) {
+            mFullScreenIcon = findViewById(R.id.exo_fullscreen_icon)
+            mFullScreenButton = findViewById(R.id.exo_fullscreen_button)
+            mFullScreenButton.setOnClickListener {
+                if (!mExoPlayerFullscreen)
+                    openFullscreenDialog()
+                else
+                    closeFullscreenDialog()
+            }
+        }
     }
 
     private fun initializeExoplayer() {
@@ -65,23 +129,17 @@ class VideoViewActivity : Activity(), Player.EventListener {
                 DefaultTrackSelector(adaptiveTrackSelectionFactory),
                 DefaultLoadControl()
         )
-        prepareExoplayer()
+
         videoView = findViewById<SimpleExoPlayerView>(R.id.videoView).apply {
             player = simpleExoplayer
         }
-        videoProgressbar = findViewById<ProgressBar>(R.id.video_progressbar)
 
-        simpleExoplayer.seekTo(playbackPosition)
+        videoProgressbar = findViewById(R.id.video_progressbar)
+
+        simpleExoplayer.seekTo(mResumePosition)
+        simpleExoplayer.prepare(buildMediaSource(Uri.parse(url)))
         simpleExoplayer.playWhenReady = true
         simpleExoplayer.addListener(this)
-    }
-
-
-
-    private fun prepareExoplayer() {
-        val uri = Uri.parse(url)
-        val mediaSource = buildMediaSource(uri)
-        simpleExoplayer.prepare(mediaSource)
     }
 
     private fun buildMediaSource(uri: Uri) : MediaSource {
@@ -89,9 +147,17 @@ class VideoViewActivity : Activity(), Player.EventListener {
         return ExtractorMediaSource(uri, dataSourceFactory, DefaultExtractorsFactory(), null, null)
     }
 
+    private fun pauseExoplayer() {
+        simpleExoplayer.playWhenReady = false
+        mResumePosition = simpleExoplayer.currentPosition
+    }
+
     private fun releaseExoplayer() {
-        playbackPosition = simpleExoplayer.currentPosition
-        simpleExoplayer.release()
+        if (simpleExoplayer != null)
+            simpleExoplayer.release()
+
+        if (mFullScreenDialog != null)
+            mFullScreenDialog.dismiss()
     }
 
     override fun onPlaybackParametersChanged(playbackParameters: PlaybackParameters?) {
