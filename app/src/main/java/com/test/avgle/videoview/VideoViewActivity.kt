@@ -90,20 +90,20 @@ class VideoViewActivity : Activity() {
     }
 
     private fun closeFullscreenDialog() {
-        val viewGroup = simpleExoPlayerView.parent as ViewGroup
-        viewGroup.removeView(simpleExoPlayerView)
-        videoFrameLayout.addView(simpleExoPlayerView)
+        val viewGroup = videoFrameLayout.parent as ViewGroup
+        viewGroup.removeView(videoFrameLayout)
+        findViewById<LinearLayout>(R.id.video_linearlayout).addView(videoFrameLayout)
         mExoPlayerFullscreen = false
         mFullScreenDialog.dismiss()
         mFullScreenIcon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_fullscreen_expand))
     }
 
     private fun openFullscreenDialog() {
-        val viewGroup = simpleExoPlayerView.parent as ViewGroup
-        viewGroup.removeView(simpleExoPlayerView)
+        val viewGroup = videoFrameLayout.parent as ViewGroup
+        viewGroup.removeView(videoFrameLayout)
 
         mFullScreenDialog.addContentView(
-                simpleExoPlayerView,
+                videoFrameLayout,
                 ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         )
 
@@ -134,12 +134,10 @@ class VideoViewActivity : Activity() {
         )
 
         videoFrameLayout = findViewById(R.id.video_framelayout)
-        with(videoFrameLayout) {
-            simpleExoPlayerView = findViewById<SimpleExoPlayerView>(R.id.simpleExoPlayerView).apply {
-                player = simpleExoplayer
-            }
-            videoProgressbar = findViewById(R.id.video_progressbar)
+        simpleExoPlayerView = findViewById<SimpleExoPlayerView>(R.id.simpleExoPlayerView).apply {
+            player = simpleExoplayer
         }
+        videoProgressbar = findViewById(R.id.video_progressbar)
 
         simpleExoplayer.seekToDefaultPosition()
         simpleExoplayer.prepare(buildMediaSource(Uri.parse(url)))
