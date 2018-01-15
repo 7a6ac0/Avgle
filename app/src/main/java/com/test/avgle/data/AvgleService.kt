@@ -1,14 +1,14 @@
 package com.test.avgle.data
 
-import com.test.avgle.data.model.Category.Category
-import com.test.avgle.data.model.Video.Video
+import com.test.avgle.data.model.category.Category
+import com.test.avgle.data.model.video.Video
 import io.reactivex.Observable
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
 /**
- * Created by admin on 2017/12/19.
+ * Created by 7a6ac0 on 2017/12/19.
  */
 interface AvgleService {
     @GET(ApiSetting.CATEGORY)

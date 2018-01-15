@@ -28,7 +28,7 @@ import android.widget.*
 import com.squareup.picasso.Picasso
 import com.test.avgle.R
 import com.test.avgle.categorydetail.CategoryDetailActivity
-import com.test.avgle.data.model.Category.CategoryDetail
+import com.test.avgle.data.model.category.CategoryDetail
 import com.test.avgle.util.showSnackBar
 
 
@@ -37,6 +37,8 @@ import com.test.avgle.util.showSnackBar
  */
 class MainFragment : Fragment(), MainContract.View {
     override lateinit var presenter: MainContract.Presenter
+    override var isActive: Boolean = false
+        get() = isAdded
 
     private lateinit var categoryView: LinearLayout
     private lateinit var categoryLabelView: TextView

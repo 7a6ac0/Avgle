@@ -1,7 +1,7 @@
 package com.test.avgle.data
 
 /**
- * Created by admin on 2017/12/19.
+ * Created by 7a6ac0 on 2017/12/19.
  */
 object ApiSetting {
     const val PATH_VIDEO_OFFSET = "offset"

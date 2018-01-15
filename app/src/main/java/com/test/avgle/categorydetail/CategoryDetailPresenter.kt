@@ -5,12 +5,14 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 /**
- * Created by admin on 2017/12/26.
+ * Created by 7a6ac0 on 2017/12/26.
  */
 class CategoryDetailPresenter(private val categoryID: String,
                               private val avgleService: AvgleService,
                               private val categoryDetailView: CategoryDetailContract.View)
     : CategoryDetailContract.Presenter {
+
+    private var firstLoad: Boolean = true
 
     init {
         categoryDetailView.presenter = this
@@ -21,31 +23,39 @@ class CategoryDetailPresenter(private val categoryID: String,
     }
 
     override fun start() {
-        loadVideos(true)
+        loadVideos(false)
     }
 
-    override fun loadVideos(showLoadingUI: Boolean) {
-        if (showLoadingUI)
-            categoryDetailView.setLoadingIndicator(true)
+    override fun loadVideos(isNeedUpdate: Boolean) {
+        loadVideos(isNeedUpdate || firstLoad, true)
+        firstLoad = false
+    }
 
-        page_offset = 0
+    private fun loadVideos(isNeedUpdate: Boolean, showLoadingUI: Boolean) {
+        if (isNeedUpdate) {
+            if (showLoadingUI)
+                categoryDetailView.setLoadingIndicator(true)
 
-        avgleService.getVideo(page_offset.toString(), categoryID)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe ({
-                    categoryDetailView.showVideos(it.response.videos)
-                    if(showLoadingUI)
-                        categoryDetailView.setLoadingIndicator(false)
+            page_offset = 0
 
-                    categoryDetailView.showLoadingVideoSuccess()
-                }, {
-                    it.printStackTrace()
-                    if(showLoadingUI)
-                        categoryDetailView.setLoadingIndicator(false)
+            avgleService.getVideo(page_offset.toString(), categoryID)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe({
+                        if (categoryDetailView.isActive) {
+                            categoryDetailView.showVideos(it.response.videos)
+                            categoryDetailView.showLoadingVideoSuccess()
+                        }
+                        if (showLoadingUI)
+                            categoryDetailView.setLoadingIndicator(false)
+                    }, {
+                        it.printStackTrace()
+                        if (showLoadingUI)
+                            categoryDetailView.setLoadingIndicator(false)
 
-                    categoryDetailView.showLoadingVideoError()
-                })
+                        categoryDetailView.showLoadingVideoError()
+                    })
+        }
     }
 
     override fun loadMoreVideos() {
@@ -67,7 +77,6 @@ class CategoryDetailPresenter(private val categoryID: String,
     }
 
     override fun openVideo(originalVideoUrl: String) {
-        // Need to parse whole html to get the video streaming url.
         categoryDetailView.showVideoAndPlay(originalVideoUrl)
     }
 }

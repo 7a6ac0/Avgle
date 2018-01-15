@@ -1,7 +1,7 @@
-package com.test.avgle.data.model.Video
+package com.test.avgle.data.model.video
 
 /**
- * Created by admin on 2017/12/20.
+ * Created by 7a6ac0 on 2017/12/20.
  */
 data class VideoDetail(val title: String,
                        val keyword: String,

@@ -12,17 +12,19 @@ import android.view.ViewGroup
 import android.widget.*
 import com.squareup.picasso.Picasso
 import com.test.avgle.R
-import com.test.avgle.data.model.Video.VideoDetail
+import com.test.avgle.data.model.video.VideoDetail
 import com.test.avgle.main.ScrollChildSwipeRefreshLayout
 import com.test.avgle.util.showSnackBar
 import com.test.avgle.videoview.VideoViewActivity
 import java.util.*
 
 /**
- * Created by admin on 2017/12/26.
+ * Created by 7a6ac0 on 2017/12/26.
  */
 class CategoryDetailFragment : Fragment(), CategoryDetailContract.View {
     override lateinit var presenter: CategoryDetailContract.Presenter
+    override var isActive: Boolean = false
+        get() = isAdded
 
     private lateinit var categorydetailView: LinearLayout
     private lateinit var categorydetailLabel: TextView

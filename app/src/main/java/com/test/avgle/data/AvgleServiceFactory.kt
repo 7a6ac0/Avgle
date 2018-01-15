@@ -1,7 +1,6 @@
 package com.test.avgle.data
 
 import com.google.gson.GsonBuilder
-import com.test.avgle.data.model.Category.Category
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -10,7 +9,7 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 /**
- * Created by admin on 2017/12/19.
+ * Created by 7a6ac0 on 2017/12/19.
  */
 object AvgleServiceFactory {
     private val BASE_URL: String = "https://api.avgle.com/"

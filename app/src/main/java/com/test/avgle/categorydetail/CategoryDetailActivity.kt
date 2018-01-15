@@ -8,7 +8,7 @@ import com.test.avgle.util.replaceFragmentInActivity
 import com.test.avgle.util.setupActionBar
 
 /**
- * Created by admin on 2017/12/26.
+ * Created by 7a6ac0 on 2017/12/26.
  */
 class CategoryDetailActivity : AppCompatActivity() {
     companion object {

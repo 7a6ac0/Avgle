@@ -18,7 +18,7 @@ package com.test.avgle.main
 
 import com.test.avgle.BasePresenter
 import com.test.avgle.BaseView
-import com.test.avgle.data.model.Category.CategoryDetail
+import com.test.avgle.data.model.category.CategoryDetail
 
 /**
  * This specifies the contract between the view and the presenter.
@@ -26,6 +26,7 @@ import com.test.avgle.data.model.Category.CategoryDetail
 interface MainContract {
 
     interface View : BaseView<Presenter> {
+        var isActive: Boolean
 
         fun showCategory(categories: List<CategoryDetail>)
 
@@ -41,7 +42,7 @@ interface MainContract {
 
     interface Presenter : BasePresenter {
 
-        fun loadCategory(showLoadingUI: Boolean)
+        fun loadCategory(isNeedUpdate: Boolean)
 
         fun openCategoryDetails(requestCategory: CategoryDetail)
 

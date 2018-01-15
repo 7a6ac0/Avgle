@@ -15,9 +15,8 @@
  */
 package com.test.avgle.main
 
-import android.util.Log
 import com.test.avgle.data.AvgleService
-import com.test.avgle.data.model.Category.CategoryDetail
+import com.test.avgle.data.model.category.CategoryDetail
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
@@ -25,41 +24,49 @@ import io.reactivex.schedulers.Schedulers
  * Listens to user actions from the UI ([MainFragment]), retrieves the data and updates the
  * UI as required.
  */
-class MainPresenter(val avgleService: AvgleService, val mainView: MainContract.View)
+class MainPresenter(private val avgleService: AvgleService,
+                    private val mainView: MainContract.View)
     : MainContract.Presenter {
 
 
-    private var firstLoad = true
+    private var firstLoad: Boolean = true
 
     init {
         mainView.presenter = this
     }
 
     override fun start() {
-        loadCategory(true)
+        loadCategory(false)
     }
 
-    override fun loadCategory(showLoadingUI: Boolean) {
+    override fun loadCategory(isNeedUpdate: Boolean) {
+        loadCategory(isNeedUpdate || firstLoad, true)
         firstLoad = false
-        if(showLoadingUI)
-            mainView.setLoadingIndicator(true)
+    }
 
-        avgleService.getCategory()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe ({
-                    mainView.showCategory(it.response.categories)
-                    if(showLoadingUI)
-                        mainView.setLoadingIndicator(false)
+    private fun loadCategory(isNeedUpdate: Boolean, showLoadingUI: Boolean) {
+        if (isNeedUpdate) {
+            if (showLoadingUI)
+                mainView.setLoadingIndicator(true)
 
-                    mainView.showLoadingCategorySuccess()
-                }, {
-                    it.printStackTrace()
-                    if(showLoadingUI)
-                        mainView.setLoadingIndicator(false)
+            avgleService.getCategory()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe({
+                        if (mainView.isActive) {
+                            mainView.showCategory(it.response.categories)
+                            mainView.showLoadingCategorySuccess()
+                        }
+                        if (showLoadingUI)
+                            mainView.setLoadingIndicator(false)
+                    }, {
+                        it.printStackTrace()
+                        if (showLoadingUI)
+                            mainView.setLoadingIndicator(false)
 
-                    mainView.showLoadingCategoryError()
-                })
+                        mainView.showLoadingCategoryError()
+                    })
+        }
     }
 
     override fun openCategoryDetails(requestCategory: CategoryDetail) {
