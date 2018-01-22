@@ -7,4 +7,7 @@
     <dimen name="fab_margin">16dp</dimen>
 
     <dimen name="list_item_padding">8dp</dimen>
+
+    <dimen name="common_zero_dp">0dp</dimen>
+    <dimen name="video_view_controller_margin">10dp</dimen>
 </resources>

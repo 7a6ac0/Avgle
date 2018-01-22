@@ -2,6 +2,7 @@ package com.test.avgle.videoview
 
 import android.app.Activity
 import android.app.Dialog
+import android.media.Image
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
@@ -9,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.google.android.exoplayer2.*
-import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
 import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.TrackGroupArray
@@ -32,13 +32,13 @@ class VideoViewActivity : Activity() {
     private lateinit var videoProgressbar: ProgressBar
     private lateinit var simpleExoplayer: SimpleExoPlayer
     private lateinit var mFullScreenDialog: Dialog
-    private lateinit var mFullScreenButton: FrameLayout
     private lateinit var mFullScreenIcon: ImageView
 
     private var mExoPlayerFullscreen = false
     private var mResumePosition = 0L
 
-    private val url = "http://demos.webmproject.org/exoplayer/glass.mp4"
+    private val videoUrl = "http://demos.webmproject.org/exoplayer/glass.mp4"
+    private lateinit var videoName: String
 
     private val bandwidthMeter by lazy {
         DefaultBandwidthMeter()
@@ -54,14 +54,17 @@ class VideoViewActivity : Activity() {
 
     companion object {
         const val VIDEO_URL = "VIDEO_URL"
+        const val VIDEO_NAME = "VIDEO_NAME"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.videoview_activity)
 
+        videoName = intent.getStringExtra(VIDEO_NAME)
+
         initFullscreenDialog()
-        initFullscreenButton()
+        initPlayBackControlView()
         initializeExoplayer()
     }
 
@@ -112,16 +115,27 @@ class VideoViewActivity : Activity() {
         mFullScreenDialog.show()
     }
 
-    private fun initFullscreenButton() {
+    private fun initPlayBackControlView() {
         val controlView = findViewById<PlaybackControlView>(R.id.exo_controller)
         with(controlView) {
             mFullScreenIcon = findViewById(R.id.exo_fullscreen_icon)
-            mFullScreenButton = findViewById(R.id.exo_fullscreen_button)
-            mFullScreenButton.setOnClickListener {
-                if (!mExoPlayerFullscreen)
-                    openFullscreenDialog()
-                else
-                    closeFullscreenDialog()
+            findViewById<FrameLayout>(R.id.exo_fullscreen_button).apply {
+                setOnClickListener {
+                    if (!mExoPlayerFullscreen)
+                        openFullscreenDialog()
+                    else
+                        closeFullscreenDialog()
+                }
+            }
+
+            findViewById<ImageView>(R.id.exo_backpress_icon).apply {
+                setOnClickListener {
+                    super.onBackPressed()
+                }
+            }
+
+            findViewById<TextView>(R.id.exo_video_name).apply {
+                text = videoName
             }
         }
     }
@@ -140,7 +154,7 @@ class VideoViewActivity : Activity() {
         videoProgressbar = findViewById(R.id.video_progressbar)
 
         simpleExoplayer.seekToDefaultPosition()
-        simpleExoplayer.prepare(buildMediaSource(Uri.parse(url)))
+        simpleExoplayer.prepare(buildMediaSource(Uri.parse(videoUrl)))
         simpleExoplayer.playWhenReady = true
         simpleExoplayer.addListener(playerEventListener)
     }

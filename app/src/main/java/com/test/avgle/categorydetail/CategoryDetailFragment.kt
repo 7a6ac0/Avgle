@@ -45,7 +45,7 @@ class CategoryDetailFragment : Fragment(), CategoryDetailContract.View {
     internal var itemListener: VideoItemListener = object : VideoItemListener {
         override fun onVideoClick(clickedVideo: VideoDetail) {
             // Need to write something to play video.
-            presenter.openVideo(clickedVideo.embedded_url)
+            presenter.openVideo(clickedVideo.embedded_url, clickedVideo.title)
         }
     }
 
@@ -136,9 +136,10 @@ class CategoryDetailFragment : Fragment(), CategoryDetailContract.View {
         view?.showSnackBar(message, Snackbar.LENGTH_LONG)
     }
 
-    override fun showVideoAndPlay(videoUrl: String) {
+    override fun showVideoAndPlay(videoUrl: String, videoName: String) {
         var intent = Intent(context, VideoViewActivity::class.java).apply {
             putExtra(VideoViewActivity.VIDEO_URL, videoUrl)
+            putExtra(VideoViewActivity.VIDEO_NAME, videoName)
         }
         startActivity(intent)
     }
@@ -162,7 +163,7 @@ class CategoryDetailFragment : Fragment(), CategoryDetailContract.View {
 
             Picasso.with(viewGroup.context).load(video.preview_url)
                     .into(rowView.findViewById<ImageView>(R.id.video_image).apply {
-                        imageAlpha = 150
+                        imageAlpha = 200
                     })
 
 

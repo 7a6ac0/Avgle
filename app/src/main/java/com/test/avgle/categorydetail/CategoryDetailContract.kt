@@ -23,7 +23,7 @@ interface CategoryDetailContract {
 
         fun showLoadingVideoSuccess()
 
-        fun showVideoAndPlay(videoUrl: String)
+        fun showVideoAndPlay(videoUrl: String, videoName: String)
     }
 
     interface Presenter : BasePresenter {
@@ -31,6 +31,6 @@ interface CategoryDetailContract {
 
         fun loadMoreVideos()
 
-        fun openVideo(originalVideoUrl: String)
+        fun openVideo(originalVideoUrl: String, videoName: String)
     }
 }
