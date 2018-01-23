@@ -1,4 +1,4 @@
-package com.test.avgle.data
+package com.test.avgle.data.api
 
 import com.google.gson.GsonBuilder
 import okhttp3.Interceptor
