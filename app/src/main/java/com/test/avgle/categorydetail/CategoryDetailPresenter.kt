@@ -1,6 +1,6 @@
 package com.test.avgle.categorydetail
 
-import com.test.avgle.data.AvgleService
+import com.test.avgle.data.api.AvgleService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 

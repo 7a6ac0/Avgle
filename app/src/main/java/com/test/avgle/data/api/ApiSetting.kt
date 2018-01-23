@@ -1,4 +1,4 @@
-package com.test.avgle.data
+package com.test.avgle.data.api
 
 /**
  * Created by 7a6ac0 on 2017/12/19.
@@ -9,6 +9,6 @@ object ApiSetting {
 
 
     const val CATEGORY = "v1/categories"
-    const val VIDEO = "v1/videos/{$PATH_VIDEO_OFFSET}"
+    const val VIDEO = "v1/videos/{${PATH_VIDEO_OFFSET}}"
 
 }

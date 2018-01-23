@@ -3,7 +3,7 @@ package com.test.avgle.categorydetail
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.test.avgle.R
-import com.test.avgle.data.AvgleServiceFactory
+import com.test.avgle.data.api.AvgleServiceFactory
 import com.test.avgle.util.replaceFragmentInActivity
 import com.test.avgle.util.setupActionBar
 

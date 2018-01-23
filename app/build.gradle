@@ -44,5 +44,10 @@ dependencies {
 
     implementation 'com.squareup.picasso:picasso:2.5.2'
     // ExoPlayer
-    compile 'com.google.android.exoplayer:exoplayer:2.6.1'
+    implementation 'com.google.android.exoplayer:exoplayer:2.6.1'
+
+    // Anko for SQLite
+    implementation "org.jetbrains.anko:anko-sqlite:$anko_version"
+    // Anko
+    implementation "org.jetbrains.anko:anko:$anko_version"
 }
