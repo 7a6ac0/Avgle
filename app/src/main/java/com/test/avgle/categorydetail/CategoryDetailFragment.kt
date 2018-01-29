@@ -1,6 +1,7 @@
 package com.test.avgle.categorydetail
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
@@ -45,7 +46,7 @@ class CategoryDetailFragment : Fragment(), CategoryDetailContract.View {
     internal var itemListener: VideoItemListener = object : VideoItemListener {
         override fun onVideoClick(clickedVideo: VideoDetail) {
             // Need to write something to play video.
-            presenter.openVideo(clickedVideo.embedded_url, clickedVideo.title)
+            presenter.openVideo(clickedVideo.video_url)
         }
     }
 
@@ -136,12 +137,8 @@ class CategoryDetailFragment : Fragment(), CategoryDetailContract.View {
         view?.showSnackBar(message, Snackbar.LENGTH_LONG)
     }
 
-    override fun showVideoAndPlay(videoUrl: String, videoName: String) {
-        var intent = Intent(context, VideoViewActivity::class.java).apply {
-            putExtra(VideoViewActivity.VIDEO_URL, videoUrl)
-            putExtra(VideoViewActivity.VIDEO_NAME, videoName)
-        }
-        startActivity(intent)
+    override fun showVideoAndPlay(videoUrl: String) {
+        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(videoUrl)))
     }
 
     private class VideoAdapter(videos: MutableList<VideoDetail>, private val itemListener: CategoryDetailFragment.VideoItemListener)

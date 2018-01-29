@@ -9,6 +9,7 @@ data class VideoDetail(val title: String,
                        val addtime: Int,
                        val viewnumber: Int,
                        val like: Int,
+                       val video_url: String,
                        val embedded_url: String,
                        val preview_url: String,
                        val preview_video_url: String)

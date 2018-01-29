@@ -76,7 +76,7 @@ class CategoryDetailPresenter(private val categoryID: String,
                 })
     }
 
-    override fun openVideo(originalVideoUrl: String, videoName: String) {
-        categoryDetailView.showVideoAndPlay(originalVideoUrl, videoName)
+    override fun openVideo(videoUrl: String) {
+        categoryDetailView.showVideoAndPlay(videoUrl)
     }
 }
