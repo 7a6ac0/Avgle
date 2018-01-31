@@ -54,7 +54,7 @@ class MainPresenter(private val avgleService: AvgleService,
                     .subscribeOn(Schedulers.io())
                     .subscribe({
                         if (mainView.isActive) {
-                            mainView.showCategory(it.response.categories)
+                            mainView.showCategory(it)
                             mainView.showLoadingCategorySuccess()
                         }
                         if (showLoadingUI)

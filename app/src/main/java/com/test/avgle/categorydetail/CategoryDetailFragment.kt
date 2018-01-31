@@ -10,13 +10,18 @@ import android.support.v4.widget.SwipeRefreshLayout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.BounceInterpolator
+import android.view.animation.ScaleAnimation
 import android.widget.*
 import com.squareup.picasso.Picasso
 import com.test.avgle.R
+import com.test.avgle.data.model.video.Video
 import com.test.avgle.data.model.video.VideoDetail
+import com.test.avgle.data.sqlite.VideoDetailDB
 import com.test.avgle.main.ScrollChildSwipeRefreshLayout
+import com.test.avgle.util.findViewOften
 import com.test.avgle.util.showSnackBar
-import com.test.avgle.videoview.VideoViewActivity
 import java.util.*
 
 /**
@@ -101,15 +106,15 @@ class CategoryDetailFragment : Fragment(), CategoryDetailContract.View {
         return root
     }
 
-    override fun showVideos(videos: MutableList<VideoDetail>) {
-        listAdapter.videos = videos
+    override fun showVideos(video: Video) {
+        listAdapter.videos = video.response.videos
         categorydetailLabel.text = arguments.getString(ARGUMENT_CATEGORY_NAME)
         categorydetailView.visibility = View.VISIBLE
     }
 
-    override fun showMoreVideos(videos: MutableList<VideoDetail>) {
+    override fun showMoreVideos(video: Video) {
         with(listAdapter) {
-            this.videos.addAll(videos)
+            this.videos.addAll(video.response.videos)
             notifyDataSetChanged()
         }
     }
@@ -148,28 +153,45 @@ class CategoryDetailFragment : Fragment(), CategoryDetailContract.View {
                 field = videos
                 notifyDataSetChanged()
             }
+        val videoDetailDB = VideoDetailDB()
 
-        override fun getView(i: Int, view: View?, viewGroup: ViewGroup): View {
+        override fun getView(i: Int, convertView: View?, viewGroup: ViewGroup): View {
             val video = getItem(i)
-            val rowView = view ?: LayoutInflater.from(viewGroup.context)
+            val videoInDB = videoDetailDB.getVideoDetailByVid(video.vid)
+            val rowView = convertView ?: LayoutInflater.from(viewGroup.context)
                     .inflate(R.layout.categorydetail_item, viewGroup, false)
 
-            with(rowView.findViewById<TextView>(R.id.video_hd_label)) {
+
+            with(rowView.findViewOften<TextView>(R.id.video_hd_label)) {
                 post { visibility = if (video.hd) View.VISIBLE else View.INVISIBLE }
             }
 
             Picasso.with(viewGroup.context).load(video.preview_url)
-                    .into(rowView.findViewById<ImageView>(R.id.video_image).apply {
+                    .into(rowView.findViewOften<ImageView>(R.id.video_image).apply {
                         imageAlpha = 200
                     })
 
 
-            with(rowView.findViewById<TextView>(R.id.video_title)) {
+            with(rowView.findViewOften<TextView>(R.id.video_title)) {
                 text = video.title
             }
 
-            with(rowView.findViewById<TextView>(R.id.video_viewnumber)) {
+            with(rowView.findViewOften<TextView>(R.id.video_viewnumber)) {
                 text = video.viewnumber.toString()
+            }
+
+            var scaleAnimation = ScaleAnimation(0.7f, 1.0f, 0.7f, 1.0f, Animation.RELATIVE_TO_SELF, 0.7f, Animation.RELATIVE_TO_SELF, 0.7f)
+            scaleAnimation?.duration = 500
+            val bounceInterpolator = BounceInterpolator()
+            scaleAnimation?.interpolator = bounceInterpolator
+
+            rowView.findViewOften<ToggleButton>(R.id.video_favorite_button).apply {
+                isChecked = false
+                setOnCheckedChangeListener(object : CompoundButton.OnCheckedChangeListener {
+                    override fun onCheckedChanged(button: CompoundButton, isChecked: Boolean) {
+                        button.startAnimation(scaleAnimation)
+                    }
+                })
             }
 
             rowView.setOnClickListener { itemListener.onVideoClick(video) }

@@ -43,7 +43,7 @@ class CategoryDetailPresenter(private val categoryID: String,
                     .subscribeOn(Schedulers.io())
                     .subscribe({
                         if (categoryDetailView.isActive) {
-                            categoryDetailView.showVideos(it.response.videos)
+                            categoryDetailView.showVideos(it)
                             categoryDetailView.showLoadingVideoSuccess()
                         }
                         if (showLoadingUI)
@@ -68,7 +68,7 @@ class CategoryDetailPresenter(private val categoryID: String,
                     if (!it.response.has_more && it.response.videos.size == 0)
                         categoryDetailView.showNoMoreVideos()
                     else
-                        categoryDetailView.showMoreVideos(it.response.videos)
+                        categoryDetailView.showMoreVideos(it)
 
                 }, {
                     it.printStackTrace()

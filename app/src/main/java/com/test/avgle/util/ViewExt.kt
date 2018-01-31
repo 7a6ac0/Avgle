@@ -16,8 +16,20 @@
 package com.test.avgle.util
 
 import android.support.design.widget.Snackbar
+import android.util.SparseArray
 import android.view.View
 
 fun View.showSnackBar(message: String, duration: Int) {
     Snackbar.make(this, message, duration).show()
+}
+
+fun <T : View> View.findViewOften(viewId: Int): T {
+    var viewHolder: SparseArray<View> = tag as? SparseArray<View> ?: SparseArray()
+    tag = viewHolder
+    var childView: View? = viewHolder.get(viewId)
+    if (null == childView) {
+        childView = findViewById(viewId)
+        viewHolder.put(viewId, childView)
+    }
+    return childView as T
 }

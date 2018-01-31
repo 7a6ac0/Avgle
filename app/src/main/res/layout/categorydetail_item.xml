@@ -45,13 +45,38 @@
         android:ellipsize="end"
         android:singleLine="true" />
 
-    <TextView
-        android:id="@+id/video_viewnumber"
+    <ToggleButton
+        android:id="@+id/video_favorite_button"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_alignStart="@+id/video_title"
+        android:layout_below="@+id/video_title"
+        android:background="@drawable/button_favorite"
+        android:checked="false"
+        android:text=""
+        android:textOff=""
+        android:textOn="" />
+
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/video_title"
         android:layout_alignParentBottom="true"
         android:layout_alignRight="@+id/video_title"
-        android:layout_marginBottom="11dp" />
+        android:layout_marginBottom="11dp"
+        android:id="@+id/linearLayout">
+
+        <TextView
+            android:id="@+id/video_viewnumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="views" />
+    </LinearLayout>
+
 
 </RelativeLayout>

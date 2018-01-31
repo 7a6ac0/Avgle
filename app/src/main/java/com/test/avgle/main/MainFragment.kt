@@ -28,6 +28,7 @@ import android.widget.*
 import com.squareup.picasso.Picasso
 import com.test.avgle.R
 import com.test.avgle.categorydetail.CategoryDetailActivity
+import com.test.avgle.data.model.category.Category
 import com.test.avgle.data.model.category.CategoryDetail
 import com.test.avgle.util.showSnackBar
 
@@ -55,8 +56,8 @@ class MainFragment : Fragment(), MainContract.View {
         fun newInstance() = MainFragment()
     }
 
-    override fun showCategory(categories: List<CategoryDetail>) {
-        listAdapter.categories = categories
+    override fun showCategory(categories: Category) {
+        listAdapter.categories = categories.response.categories
         categoryLabelView.text = resources.getString(R.string.all_categories)
         categoryView.visibility = View.VISIBLE
     }

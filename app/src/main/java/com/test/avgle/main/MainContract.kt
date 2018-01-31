@@ -18,6 +18,7 @@ package com.test.avgle.main
 
 import com.test.avgle.BasePresenter
 import com.test.avgle.BaseView
+import com.test.avgle.data.model.category.Category
 import com.test.avgle.data.model.category.CategoryDetail
 
 /**
@@ -28,7 +29,7 @@ interface MainContract {
     interface View : BaseView<Presenter> {
         var isActive: Boolean
 
-        fun showCategory(categories: List<CategoryDetail>)
+        fun showCategory(categories: Category)
 
         fun setLoadingIndicator(active: Boolean)
 
