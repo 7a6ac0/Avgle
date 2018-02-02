@@ -16,4 +16,5 @@ object VideoDetailTable {
     val EMBEDDED_URL = "embedded_url"
     val PREVIEW_URL = "preview_url"
     val PREVIEW_VIDEO_URL = "preview_video_url"
+    val IS_FAVORITE = "isFavorite"
 }

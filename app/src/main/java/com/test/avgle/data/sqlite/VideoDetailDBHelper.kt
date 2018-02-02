@@ -2,6 +2,7 @@ package com.test.avgle.data.sqlite
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
+import com.test.avgle.data.model.video.Video
 import com.test.avgle.main.MainApplication
 import org.jetbrains.anko.db.*
 
@@ -25,14 +26,15 @@ class VideoDetailDBHelper(ctx: Context = MainApplication.instance) :
                 VideoDetailTable.VID to INTEGER + PRIMARY_KEY,
                     VideoDetailTable.TITLE to TEXT,
                     VideoDetailTable.KEYWORD to TEXT,
-                    VideoDetailTable.HD to TEXT,
+                    VideoDetailTable.HD to INTEGER,
                     VideoDetailTable.ADD_TIME to INTEGER,
                     VideoDetailTable.VIEW_NUMBER to INTEGER,
                     VideoDetailTable.LIKE to INTEGER,
                     VideoDetailTable.VIDEO_URL to TEXT,
                     VideoDetailTable.EMBEDDED_URL to TEXT,
                     VideoDetailTable.PREVIEW_URL to TEXT,
-                    VideoDetailTable.PREVIEW_VIDEO_URL to TEXT
+                    VideoDetailTable.PREVIEW_VIDEO_URL to TEXT,
+                    VideoDetailTable.IS_FAVORITE to INTEGER
                 )
     }
 

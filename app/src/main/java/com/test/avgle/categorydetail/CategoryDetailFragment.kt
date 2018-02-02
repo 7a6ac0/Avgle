@@ -186,10 +186,17 @@ class CategoryDetailFragment : Fragment(), CategoryDetailContract.View {
             scaleAnimation?.interpolator = bounceInterpolator
 
             rowView.findViewOften<ToggleButton>(R.id.video_favorite_button).apply {
-                isChecked = false
-                setOnCheckedChangeListener(object : CompoundButton.OnCheckedChangeListener {
-                    override fun onCheckedChanged(button: CompoundButton, isChecked: Boolean) {
-                        button.startAnimation(scaleAnimation)
+                isChecked = videoInDB?.isFavorite ?: false
+                setOnClickListener(object : View.OnClickListener {
+                    override fun onClick(view: View?) {
+                        startAnimation(scaleAnimation)
+                        if (isChecked) {
+                            video.isFavorite = isChecked
+                            videoDetailDB.saveVideoDetail(video)
+                        }
+                        else {
+                            videoDetailDB.deleteVideoDetailByVid(video.vid)
+                        }
                     }
                 })
             }
