@@ -13,5 +13,7 @@ data class VideoDetail(val vid: Long,
                        val video_url: String,
                        val embedded_url: String,
                        val preview_url: String,
-                       val preview_video_url: String,
-                       var isFavorite: Boolean)
+                       val preview_video_url: String
+                       ) {
+    var isFavorite: Boolean = false
+}

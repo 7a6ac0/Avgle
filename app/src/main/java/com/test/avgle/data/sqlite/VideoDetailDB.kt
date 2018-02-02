@@ -1,8 +1,10 @@
 package com.test.avgle.data.sqlite
 
-import com.antonioleiva.weatherapp.extensions.parseOpt
-import com.antonioleiva.weatherapp.extensions.toVarargArray
+
 import com.test.avgle.data.model.video.VideoDetail
+import com.test.avgle.util.parseList
+import com.test.avgle.util.parseOpt
+import com.test.avgle.util.toVarargArray
 import org.jetbrains.anko.db.delete
 import org.jetbrains.anko.db.insert
 import org.jetbrains.anko.db.select
@@ -19,6 +21,12 @@ class VideoDetailDB(private val videoDetailDBHelper: VideoDetailDBHelper = Video
                 .whereSimple(request, vid.toString())
                 .parseOpt { VideoDetailClass(HashMap(it)) }
         result?.let { dataMapper.convertToDomain(it) }
+    }
+
+    fun getAllVideoDetail() = videoDetailDBHelper.use {
+        val result = select(VideoDetailTable.TABLE_NAME)
+                .parseList { VideoDetailClass(HashMap(it)) }
+        result?.map { dataMapper.convertToDomain(it) }
     }
 
     fun deleteVideoDetailByVid(vid: Long) = videoDetailDBHelper.use {

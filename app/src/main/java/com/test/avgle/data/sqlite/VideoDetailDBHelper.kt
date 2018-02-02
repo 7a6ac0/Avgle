@@ -2,7 +2,6 @@ package com.test.avgle.data.sqlite
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
-import com.test.avgle.data.model.video.Video
 import com.test.avgle.main.MainApplication
 import org.jetbrains.anko.db.*
 

@@ -1,4 +1,4 @@
-package com.antonioleiva.weatherapp.extensions
+package com.test.avgle.util
 
 import android.database.sqlite.SQLiteDatabase
 import org.jetbrains.anko.db.MapRowParser

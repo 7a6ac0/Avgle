@@ -161,7 +161,6 @@ class CategoryDetailFragment : Fragment(), CategoryDetailContract.View {
             val rowView = convertView ?: LayoutInflater.from(viewGroup.context)
                     .inflate(R.layout.categorydetail_item, viewGroup, false)
 
-
             with(rowView.findViewOften<TextView>(R.id.video_hd_label)) {
                 post { visibility = if (video.hd) View.VISIBLE else View.INVISIBLE }
             }
@@ -170,7 +169,6 @@ class CategoryDetailFragment : Fragment(), CategoryDetailContract.View {
                     .into(rowView.findViewOften<ImageView>(R.id.video_image).apply {
                         imageAlpha = 200
                     })
-
 
             with(rowView.findViewOften<TextView>(R.id.video_title)) {
                 text = video.title

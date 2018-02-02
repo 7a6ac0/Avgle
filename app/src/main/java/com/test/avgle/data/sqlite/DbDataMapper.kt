@@ -39,8 +39,9 @@ class DbDataMapper {
                 video_url,
                 embedded_url,
                 preview_url,
-                preview_video_url,
-                video_isFavorite
-        )
+                preview_video_url
+        ).apply {
+            isFavorite = video_isFavorite
+        }
     }
 }
