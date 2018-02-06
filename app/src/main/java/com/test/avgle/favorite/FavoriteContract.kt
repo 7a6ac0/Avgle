@@ -9,10 +9,22 @@ import com.test.avgle.data.model.video.VideoDetail
  */
 interface FavoriteContract {
     interface View : BaseView<Presenter> {
-        fun showFavoriteVideos(videos: MutableList<VideoDetail>)
+        fun showFavoriteVideos(videos: List<VideoDetail>)
+
+        fun setLoadingIndicator(active: Boolean)
+
+        fun showVideoAndPlay(videoUrl: String)
     }
 
     interface Presenter : BasePresenter {
         fun loadFavoriteVideos()
+
+        fun getVideoDetailByVid(vid: Long): VideoDetail?
+
+        fun saveVideoDetail(video: VideoDetail)
+
+        fun deleteVideoDetailByVid(vid: Long)
+
+        fun openVideo(videoUrl: String)
     }
 }

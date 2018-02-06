@@ -15,15 +15,15 @@
  */
 package com.test.avgle.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
-
 import com.test.avgle.R
-import com.test.avgle.data.api.AvgleServiceFactory
+import com.test.avgle.favorite.FavoriteActivity
 import com.test.avgle.util.replaceFragmentInActivity
 import com.test.avgle.util.setupActionBar
 
@@ -53,16 +53,20 @@ class MainActivity : AppCompatActivity() {
             replaceFragmentInActivity(it, R.id.contentFrame)
         }
 
-        val avgleService = AvgleServiceFactory.APIService
-        mainPresenter = MainPresenter(avgleService, mainFragment)
+        mainPresenter = MainPresenter(mainFragment)
 
     }
 
     private fun setupDrawerContent(navigationView: NavigationView) {
         navigationView.setNavigationItemSelectedListener { menuItem ->
-
+            when (menuItem.itemId) {
+                R.id.nav_favorite -> {
+                    val intent = Intent(this@MainActivity, FavoriteActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                }
+            }
             // Close the navigation drawer when an item is selected.
-            menuItem.isChecked = true
             drawerLayout.closeDrawers()
             true
         }

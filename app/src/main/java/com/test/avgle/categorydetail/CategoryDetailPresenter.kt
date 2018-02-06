@@ -1,6 +1,8 @@
 package com.test.avgle.categorydetail
 
-import com.test.avgle.data.api.AvgleService
+import com.test.avgle.data.api.AvgleServiceFactory
+import com.test.avgle.data.model.video.VideoDetail
+import com.test.avgle.data.sqlite.VideoDetailDB
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
@@ -8,11 +10,14 @@ import io.reactivex.schedulers.Schedulers
  * Created by 7a6ac0 on 2017/12/26.
  */
 class CategoryDetailPresenter(private val categoryID: String,
-                              private val avgleService: AvgleService,
                               private val categoryDetailView: CategoryDetailContract.View)
     : CategoryDetailContract.Presenter {
 
     private var firstLoad: Boolean = true
+
+    private val avgleService by lazy { AvgleServiceFactory.APIService }
+
+    private val videoDetailDB by lazy { VideoDetailDB() }
 
     init {
         categoryDetailView.presenter = this
@@ -74,6 +79,18 @@ class CategoryDetailPresenter(private val categoryID: String,
                     it.printStackTrace()
                     categoryDetailView.showLoadingVideoError()
                 })
+    }
+
+    override fun getVideoDetailByVid(vid: Long): VideoDetail? {
+        return videoDetailDB.getVideoDetailByVid(vid)
+    }
+
+    override fun saveVideoDetail(video: VideoDetail) {
+        videoDetailDB.saveVideoDetail(video)
+    }
+
+    override fun deleteVideoDetailByVid(vid: Long) {
+        videoDetailDB.deleteVideoDetailByVid(vid)
     }
 
     override fun openVideo(videoUrl: String) {

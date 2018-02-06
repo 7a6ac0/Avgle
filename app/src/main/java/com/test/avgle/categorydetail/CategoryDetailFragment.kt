@@ -18,7 +18,6 @@ import com.squareup.picasso.Picasso
 import com.test.avgle.R
 import com.test.avgle.data.model.video.Video
 import com.test.avgle.data.model.video.VideoDetail
-import com.test.avgle.data.sqlite.VideoDetailDB
 import com.test.avgle.main.ScrollChildSwipeRefreshLayout
 import com.test.avgle.util.findViewOften
 import com.test.avgle.util.showSnackBar
@@ -48,14 +47,14 @@ class CategoryDetailFragment : Fragment(), CategoryDetailContract.View {
                 }
     }
 
-    internal var itemListener: VideoItemListener = object : VideoItemListener {
+    private var itemListener: VideoItemListener = object : VideoItemListener {
         override fun onVideoClick(clickedVideo: VideoDetail) {
             // Need to write something to play video.
             presenter.openVideo(clickedVideo.video_url)
         }
     }
 
-    private val listAdapter = VideoAdapter(ArrayList(0), itemListener)
+    private val listAdapter by lazy { VideoAdapter(ArrayList(0), itemListener, presenter) }
 
     override fun onResume() {
         super.onResume()
@@ -146,18 +145,18 @@ class CategoryDetailFragment : Fragment(), CategoryDetailContract.View {
         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(videoUrl)))
     }
 
-    private class VideoAdapter(videos: MutableList<VideoDetail>, private val itemListener: CategoryDetailFragment.VideoItemListener)
+    private class VideoAdapter(videos: MutableList<VideoDetail>,
+                               private val itemListener: CategoryDetailFragment.VideoItemListener,
+                               private val presenterInAdapter: CategoryDetailContract.Presenter)
         : BaseAdapter() {
         var videos: MutableList<VideoDetail> = videos
             set(videos) {
                 field = videos
                 notifyDataSetChanged()
             }
-        val videoDetailDB = VideoDetailDB()
-
         override fun getView(i: Int, convertView: View?, viewGroup: ViewGroup): View {
             val video = getItem(i)
-            val videoInDB = videoDetailDB.getVideoDetailByVid(video.vid)
+            val videoInDB = presenterInAdapter.getVideoDetailByVid(video.vid)
             val rowView = convertView ?: LayoutInflater.from(viewGroup.context)
                     .inflate(R.layout.categorydetail_item, viewGroup, false)
 
@@ -190,10 +189,10 @@ class CategoryDetailFragment : Fragment(), CategoryDetailContract.View {
                         startAnimation(scaleAnimation)
                         if (isChecked) {
                             video.isFavorite = isChecked
-                            videoDetailDB.saveVideoDetail(video)
+                            presenterInAdapter.saveVideoDetail(video)
                         }
                         else {
-                            videoDetailDB.deleteVideoDetailByVid(video.vid)
+                            presenterInAdapter.deleteVideoDetailByVid(video.vid)
                         }
                     }
                 })

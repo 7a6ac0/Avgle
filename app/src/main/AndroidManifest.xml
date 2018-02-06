@@ -27,10 +27,8 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".videoview.VideoViewActivity"
-            android:configChanges="screenSize|keyboardHidden|orientation"
-            android:launchMode="singleTop"
-            android:theme="@style/PlayerTheme">
+            android:name=".favorite.FavoriteActivity"
+            android:screenOrientation="portrait" >
         </activity>
     </application>
 

@@ -50,7 +50,7 @@ class MainFragment : Fragment(), MainContract.View {
         }
     }
 
-    private val listAdapter = CategoryAdapter(ArrayList(0), itemListener)
+    private val listAdapter by lazy { CategoryAdapter(ArrayList(0), itemListener) }
 
     companion object {
         fun newInstance() = MainFragment()

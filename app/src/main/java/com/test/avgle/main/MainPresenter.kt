@@ -15,7 +15,7 @@
  */
 package com.test.avgle.main
 
-import com.test.avgle.data.api.AvgleService
+import com.test.avgle.data.api.AvgleServiceFactory
 import com.test.avgle.data.model.category.CategoryDetail
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -24,12 +24,12 @@ import io.reactivex.schedulers.Schedulers
  * Listens to user actions from the UI ([MainFragment]), retrieves the data and updates the
  * UI as required.
  */
-class MainPresenter(private val avgleService: AvgleService,
-                    private val mainView: MainContract.View)
+class MainPresenter(private val mainView: MainContract.View)
     : MainContract.Presenter {
 
-
     private var firstLoad: Boolean = true
+
+    private val avgleService by lazy { AvgleServiceFactory.APIService }
 
     init {
         mainView.presenter = this
