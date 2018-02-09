@@ -25,6 +25,8 @@ interface CategoryDetailContract {
         fun showLoadingVideoSuccess()
 
         fun showVideoAndPlay(videoUrl: String)
+
+        fun showFilteringPopUpMenu()
     }
 
     interface Presenter : BasePresenter {

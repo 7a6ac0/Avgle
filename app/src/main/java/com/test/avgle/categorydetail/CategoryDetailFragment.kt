@@ -7,9 +7,8 @@ import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v4.widget.SwipeRefreshLayout
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.support.v7.widget.PopupMenu
+import android.view.*
 import android.view.animation.Animation
 import android.view.animation.BounceInterpolator
 import android.view.animation.ScaleAnimation
@@ -33,6 +32,8 @@ class CategoryDetailFragment : Fragment(), CategoryDetailContract.View {
 
     private lateinit var categorydetailView: LinearLayout
     private lateinit var categorydetailLabel: TextView
+
+    private var currentSortType = CategoryDetailSortType.NONE_SORT
 
     companion object {
         private val ARGUMENT_CATEGORY_ID = "CATEGORY_ID"
@@ -101,8 +102,21 @@ class CategoryDetailFragment : Fragment(), CategoryDetailContract.View {
             categorydetailView = findViewById(R.id.categorydetail_linear_layout)
             categorydetailLabel = findViewById(R.id.categorydetail_label)
         }
+
         setHasOptionsMenu(true)
         return root
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_sort -> showFilteringPopUpMenu()
+            android.R.id.home -> activity.finish()
+        }
+        return true
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater) {
+        inflater.inflate(R.menu.categorydetail_fragment_menu, menu)
     }
 
     override fun showVideos(video: Video) {
@@ -114,7 +128,11 @@ class CategoryDetailFragment : Fragment(), CategoryDetailContract.View {
     override fun showMoreVideos(video: Video) {
         with(listAdapter) {
             this.videos.addAll(video.response.videos)
-            notifyDataSetChanged()
+            when (currentSortType) {
+                CategoryDetailSortType.NONE_SORT -> notifyDataSetChanged()
+                CategoryDetailSortType.ASC_SORT -> sortVideoListByAscending()
+                CategoryDetailSortType.DESC_SORT -> sortVideoListByDescending()
+            }
         }
     }
 
@@ -145,15 +163,47 @@ class CategoryDetailFragment : Fragment(), CategoryDetailContract.View {
         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(videoUrl)))
     }
 
+    override fun showFilteringPopUpMenu() {
+        PopupMenu(context, activity.findViewById(R.id.menu_sort)).apply {
+            menuInflater.inflate(R.menu.sort_videos, menu)
+            setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.sorted_by_viewnumber_with_asc -> sortVideoListByAscending()
+                    R.id.sorted_by_viewnumber_with_desc -> sortVideoListByDescending()
+                }
+                true
+            }
+            show()
+        }
+    }
+
+    private fun sortVideoListByAscending() {
+        with(listAdapter) {
+            videos.sortBy({ it.viewnumber })
+            notifyDataSetChanged()
+        }
+        currentSortType = CategoryDetailSortType.ASC_SORT
+    }
+
+    private fun sortVideoListByDescending() {
+        with(listAdapter) {
+            videos.sortByDescending ( { it.viewnumber } )
+            notifyDataSetChanged()
+        }
+        currentSortType = CategoryDetailSortType.DESC_SORT
+    }
+
     private class VideoAdapter(videos: MutableList<VideoDetail>,
                                private val itemListener: CategoryDetailFragment.VideoItemListener,
                                private val presenterInAdapter: CategoryDetailContract.Presenter)
         : BaseAdapter() {
+
         var videos: MutableList<VideoDetail> = videos
             set(videos) {
                 field = videos
                 notifyDataSetChanged()
             }
+
         override fun getView(i: Int, convertView: View?, viewGroup: ViewGroup): View {
             val video = getItem(i)
             val videoInDB = presenterInAdapter.getVideoDetailByVid(video.vid)

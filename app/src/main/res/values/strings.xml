@@ -18,4 +18,8 @@
     <string name="video_hd">HD</string>
     <string name="nav_category">Category</string>
     <string name="nav_favorite">My Favorite</string>
+
+    <string name="sorted_menu">Sort</string>
+    <string name="sorted_by_viewnumber_with_asc">Sort by view number(ASC)</string>
+    <string name="sorted_by_viewnumber_with_desc">Sort by view number(DESC)</string>
 </resources>
