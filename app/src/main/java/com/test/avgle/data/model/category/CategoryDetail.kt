@@ -6,4 +6,4 @@ package com.test.avgle.data.model.category
 data class CategoryDetail(val CHID: String,
                           val name: String,
                           val total_videos: Int,
-                          val cover_url: String)
+                          var cover_url: String)
