@@ -54,6 +54,11 @@ class MainPresenter(private val mainView: MainContract.View)
                     .subscribeOn(Schedulers.io())
                     .subscribe({
                         if (mainView.isActive) {
+                            val categories = it.response.categories
+                            for (category: CategoryDetail in categories) {
+                                // Hardcode: fix error image URL in API response
+                                category.cover_url = category.cover_url.replace("avgle.com", "static.avgle.com")
+                            }
                             mainView.showCategory(it)
                             mainView.showLoadingCategorySuccess()
                         }
