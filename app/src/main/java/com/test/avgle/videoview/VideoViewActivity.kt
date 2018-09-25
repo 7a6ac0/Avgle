@@ -2,7 +2,6 @@ package com.test.avgle.videoview
 
 import android.app.Activity
 import android.app.Dialog
-import android.media.Image
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
@@ -202,7 +201,7 @@ class VideoViewActivity : Activity() {
         override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {
         }
 
-        override fun onTimelineChanged(timeline: Timeline?, manifest: Any?) {
+        override fun onTimelineChanged(timeline: Timeline?, manifest: Any?, reason: Int) {
         }
 
         override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
